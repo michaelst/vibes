@@ -1,8 +1,20 @@
 import Config
 
-if System.get_env("PHX_SERVER") do
-  config :vibes, VibesWeb.Endpoint, server: true
+Dotenv.load!()
+
+defmodule Secret do
+  def read!(name, non_prod_default \\ nil) do
+    if config_env() == :prod do
+      File.read!("/etc/secrets/" <> name)
+    else
+      System.get_env(name, non_prod_default)
+    end
+  end
 end
+
+config :vibes, Vibes.OAuth2.Spotify,
+  client_id: System.get_env("SPOTIFY_CLIENT_ID"),
+  client_secret: Secret.read!("SPOTIFY_CLIENT_SECRET")
 
 if config_env() == :prod do
   database_url =
@@ -38,5 +50,6 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
-    secret_key_base: secret_key_base
+    secret_key_base: secret_key_base,
+    server: true
 end
