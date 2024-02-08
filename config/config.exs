@@ -4,6 +4,10 @@ config :vibes,
   ecto_repos: [Vibes.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
 
+config :vibes, Vibes.Repo,
+  migration_primary_key: [type: :text],
+  migration_timestamps: [type: :utc_datetime]
+
 # Configures the endpoint
 config :vibes, VibesWeb.Endpoint,
   url: [host: "localhost"],

@@ -8,6 +8,7 @@ defmodule VibesWeb.Router do
     plug :put_root_layout, html: {VibesWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug VibesWeb.Plugs.LoadUser
   end
 
   pipeline :api do
@@ -18,6 +19,8 @@ defmodule VibesWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/auth/login", AuthController, :login
+    get "/auth/callback", AuthController, :callback
   end
 
   # Other scopes may use custom stacks.
