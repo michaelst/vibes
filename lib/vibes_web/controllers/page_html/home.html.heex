@@ -1,7 +1,0 @@
-<.flash_group flash={@flash} />
-<div :if={@current_user}>
-  Welcome <%= @current_user.name %>
-</div>
-<div :if={is_nil(@current_user)}>
-  <.link href={~p"/auth/login"}>Login</.link>
-</div>

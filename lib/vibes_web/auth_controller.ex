@@ -4,12 +4,18 @@ defmodule VibesWeb.AuthController do
   alias Vibes.OAuth2.Spotify
   alias Vibes.Users
 
-  def login(conn, _params) do
-    redirect(conn, external: Spotify.authorize_url!() |> IO.inspect())
+  def logout(conn, _params) do
+    conn
+    |> clear_session()
+    |> redirect(to: ~p"/login")
+  end
+
+  def request(conn, _params) do
+    redirect(conn, external: Spotify.authorize_url!())
   end
 
   def callback(conn, params) do
-    {:ok, client} = Spotify.get_user_token(code: params["code"]) |> IO.inspect()
+    {:ok, client} = Spotify.get_user_token(code: params["code"])
 
     {:ok,
      %{
@@ -18,7 +24,7 @@ defmodule VibesWeb.AuthController do
          "display_name" => name
        }
      }} =
-      OAuth2.Client.get(client, "/v1/me") |> IO.inspect()
+      OAuth2.Client.get(client, "/v1/me")
 
     {:ok, user} =
       Users.get_or_create_user(%{
