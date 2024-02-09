@@ -4,6 +4,10 @@ config :vibes,
   ecto_repos: [Vibes.Repo],
   generators: [timestamp_type: :utc_datetime, binary_id: true]
 
+config :vibes, Vibes.Repo,
+  migration_primary_key: [type: :text],
+  migration_timestamps: [type: :utc_datetime]
+
 # Configures the endpoint
 config :vibes, VibesWeb.Endpoint,
   url: [host: "localhost"],
@@ -44,6 +48,8 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :oauth2, debug: true
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

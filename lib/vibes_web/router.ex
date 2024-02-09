@@ -10,20 +10,23 @@ defmodule VibesWeb.Router do
     plug :put_secure_browser_headers
   end
 
-  pipeline :api do
-    plug :accepts, ["json"]
-  end
-
   scope "/", VibesWeb do
     pipe_through :browser
 
-    get "/", PageController, :home
+    get "/login", PageController, :login
+    get "/logout", AuthController, :logout
+
+    get "/auth/request", AuthController, :request
+    get "/auth/callback", AuthController, :callback
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", VibesWeb do
-  #   pipe_through :api
-  # end
+  live_session :authenticated, on_mount: VibesWeb.Live.OnMount do
+    scope "/", VibesWeb.Live do
+      pipe_through :browser
+
+      live "/", Home
+    end
+  end
 
   # Enable LiveDashboard in development
   if Application.compile_env(:vibes, :dev_routes) do
