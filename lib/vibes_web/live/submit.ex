@@ -4,11 +4,7 @@ defmodule VibesWeb.Live.Submit do
   def mount(params, _session, socket) do
     challenge = Vibes.Challenges.get_challenge(params["id"])
 
-    {:ok,
-     assign(socket,
-       challenge: challenge,
-       results: %{}
-     )}
+    {:ok, assign(socket, challenge: challenge, results: %{})}
   rescue
     _error -> {:ok, redirect(socket, to: ~p"/")}
   end

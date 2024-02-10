@@ -24,8 +24,15 @@ defmodule Vibes.Challenges do
   end
 
   def submit_track(challenge, user, track) do
+    query =
+      from s in Submission,
+        where: s.challenge_id == ^challenge.id and s.user_id == ^user.id,
+        select: max(s.order)
+
+    max = Repo.one(query)
+
     with {:ok, track} <- Vibes.Music.insert_track(track) do
-      %{challenge: challenge, user: user, track: track}
+      %{challenge: challenge, user: user, track: track, order: max + 1}
       |> Submission.create_changeset()
       |> Repo.insert()
     end
@@ -35,12 +42,17 @@ defmodule Vibes.Challenges do
     Repo.delete(submission)
   end
 
-  def save_order(submissions) do
+  def save_order(submissions, user) do
+    query = from s in Submission, where: s.user_id == ^user.id
+    Repo.update_all(query, set: [order: nil])
+
     submissions
     |> Enum.with_index()
     |> Enum.map(fn {submission, index} ->
-      Submission.update_changeset(submission, %{order: index})
+      submission
+      |> Submission.update_changeset(%{order: index})
+      |> Ecto.Changeset.force_change(:order, index)
+      |> Repo.update!()
     end)
-    |> Repo.insert_all(on_conflict: :replace_all, conflict_target: :id)
   end
 end

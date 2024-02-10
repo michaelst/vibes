@@ -31,9 +31,14 @@ defmodule VibesWeb.Live.Challenge do
         </div>
       </div>
     </div>
-    <ul role="list" class="divide-y divide-gray-800">
-      <li :for={submission <- @submissions} class="flex justify-between gap-x-6 py-5">
-        <div class="flex min-w-0 gap-x-4">
+    <ul phx-hook="Sortable" class="divide-y divide-gray-800" id={@challenge.id}>
+      <li
+        :for={submission <- @submissions}
+        id={submission.id}
+        class="flex justify-between gap-x-6 py-5"
+      >
+        <div class="flex min-w-0 gap-x-4 items-center">
+          <div :if={submission.order} class="text-gray-400"><%= submission.order + 1 %></div>
           <img class="h-12 w-12 flex-none bg-gray-800" src={submission.track.artwork_url} />
           <div class="min-w-0 flex-auto">
             <p class="text-sm font-semibold leading-6 text-white"><%= submission.track.name %></p>
@@ -65,5 +70,16 @@ defmodule VibesWeb.Live.Challenge do
       {:error, _reason} ->
         {:noreply, put_flash(socket, :error, "Failed to remove submission")}
     end
+  end
+
+  def handle_event("reposition", %{"new" => new, "old" => old}, socket) do
+    {to_move, submissions} = List.pop_at(socket.assigns.submissions, old)
+
+    submissions =
+      submissions
+      |> List.insert_at(new, to_move)
+      |> Vibes.Challenges.save_order(socket.assigns.current_user)
+
+    {:noreply, assign(socket, submissions: submissions)}
   end
 end
