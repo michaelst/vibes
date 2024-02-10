@@ -1,5 +1,5 @@
 defmodule Vibes.Users.User do
-  use Ecto.Schema
+  use Vibes.Schema
   import Ecto.Changeset
 
   @primary_key {:id, UXID, autogenerate: true, prefix: "usr"}

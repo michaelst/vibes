@@ -56,6 +56,7 @@ defmodule Vibes.MixProject do
       {:phoenix, "~> 1.7.11"},
       {:postgrex, ">= 0.0.0"},
       {:tailwind, "~> 0.2", runtime: Mix.env() == :dev},
+      {:tesla, "~> 1.8"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 1.0"},
       {:uxid, "~> 0.2"}
