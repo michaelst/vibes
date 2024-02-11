@@ -29,7 +29,8 @@ defmodule Vibes.Challenges do
         where: s.challenge_id == ^challenge.id and s.user_id == ^user.id,
         select: max(s.order)
 
-    max = Repo.one(query)
+    # defaults to negative 1 as this is 0 index based
+    max = Repo.one(query) || -1
 
     with {:ok, track} <- Vibes.Music.insert_track(track) do
       %{challenge: challenge, user: user, track: track, order: max + 1}
