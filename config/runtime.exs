@@ -1,6 +1,6 @@
 import Config
 
-Dotenv.load!()
+if Config.config_env() == :dev, do: Dotenv.load!()
 
 defmodule Secret do
   def read!(name, non_prod_default \\ nil) do
