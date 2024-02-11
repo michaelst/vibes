@@ -1,0 +1,23 @@
+nameOverride: vibes
+
+imagePullSecrets:
+  - name: github-docker-auth
+
+migrations:
+  run: true
+  command: [./bin/vibes, eval, Vibes.Release.migrate()]
+
+service:
+  routes:
+    - domain: ifyougetityougetit.com
+  targetPort: 4000
+
+resources:
+  requests:
+    cpu: 250m
+  limits:
+    memory: 1G
+
+envVars:
+  DB_HOSTNAME: aero.blue
+  DB_USERNAME: vibes
