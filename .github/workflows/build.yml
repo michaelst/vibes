@@ -26,4 +26,4 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           push: true
-          tags: ghcr.io/vibes/vibes:${{ github.sha }}
+          tags: ghcr.io/michaelst/vibes:${{ github.sha }}

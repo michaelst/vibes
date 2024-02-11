@@ -9,8 +9,8 @@ docker buildx build -t ghcr.io/vibes/vibes:$COMMIT_SHA --push .
 
 helm upgrade --install vibes oci://ghcr.io/michaelst/helm/cloud-57 \
   -f .devops/values.yaml \
-  --set image.repository=ghcr.io/vibes/vibes \
+  --set image.repository=ghcr.io/michaelst/vibes \
   --set image.tag=$COMMIT_SHA \
-  --version 1.0.3 \
+  --version 1.0.5 \
   --atomic \
   -n vibes
