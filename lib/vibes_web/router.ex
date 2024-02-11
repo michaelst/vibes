@@ -1,6 +1,8 @@
 defmodule VibesWeb.Router do
   use VibesWeb, :router
 
+  forward "/_health", HealthCheck
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
