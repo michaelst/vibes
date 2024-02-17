@@ -1,18 +1,18 @@
 defmodule VibesWeb.Live.Submit do
   use VibesWeb, :live_view
 
-  def mount(params, _session, socket) do
-    challenge = Vibes.Challenges.get_challenge(params["id"])
+  def mount(_params, _session, socket) do
+    challenge = Vibes.Challenges.current_challenge()
 
     {:ok, assign(socket, challenge: challenge, results: %{})}
   rescue
-    _error -> {:ok, redirect(socket, to: ~p"/")}
+    _error -> {:ok, push_navigate(socket, to: ~p"/")}
   end
 
   def render(assigns) do
     ~H"""
     <div class="bg-gray-900 mb-8">
-      <.link href={~p"/challenges/#{@challenge.id}"} class="text-white">Back</.link>
+      <.link navigate={~p"/"} class="text-white">Back</.link>
       <div class="mx-auto max-w-7xl mt-4">
         <.form for={%{}} phx-change="search">
           <div class="mt-2">
@@ -63,7 +63,7 @@ defmodule VibesWeb.Live.Submit do
            track
          ) do
       {:ok, _submission} ->
-        {:noreply, redirect(socket, to: ~p"/challenges/#{socket.assigns.challenge.id}")}
+        {:noreply, push_navigate(socket, to: ~p"/")}
 
       {:error, _changeset} ->
         {:noreply, put_flash(socket, :error, "Unable to submit track")}

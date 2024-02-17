@@ -6,7 +6,11 @@ defmodule Vibes.Challenges do
   alias Vibes.Repo
 
   def current_challenge() do
-    Repo.one(from c in Challenge, where: c.status == "active")
+    Repo.one(from c in Challenge, where: c.status in ["active", "reveal"])
+  end
+
+  def current_challenge(status) do
+    Repo.one(from c in Challenge, where: c.status == ^status)
   end
 
   def get_challenge(id) do
@@ -21,6 +25,20 @@ defmodule Vibes.Challenges do
         preload: :track
 
     Repo.all(query)
+  end
+
+  def get_submissions(challenge_id) do
+    query =
+      from s in Submission,
+        where: s.challenge_id == ^challenge_id,
+        order_by: s.order,
+        preload: [:user, :track]
+
+    Repo.all(query)
+  end
+
+  def get_submission(id) do
+    Repo.get!(Submission, id) |> Repo.preload(:track)
   end
 
   def submit_track(challenge, user, track) do
@@ -55,5 +73,25 @@ defmodule Vibes.Challenges do
       |> Ecto.Changeset.force_change(:order, index)
       |> Repo.update!()
     end)
+  end
+
+  def reveal_submission(challenge_id) do
+    query =
+      from s in Submission,
+        join: c in assoc(s, :challenge),
+        where: s.challenge_id == ^challenge_id and is_nil(s.revealed_at),
+        order_by: [s.order, {:desc, c.submitted_by_user_id == s.user_id}],
+        limit: 1
+
+    query
+    |> Repo.one()
+    |> Submission.update_changeset(%{revealed_at: DateTime.utc_now()})
+    |> Repo.update!()
+  end
+
+  def update_submission(submission, attrs) do
+    submission
+    |> Submission.update_changeset(attrs)
+    |> Repo.update()
   end
 end

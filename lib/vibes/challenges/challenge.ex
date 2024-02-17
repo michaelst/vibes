@@ -9,6 +9,8 @@ defmodule Vibes.Challenges.Challenge do
     field :tracks_per_user, :integer
     field :status, :string
 
+    belongs_to :submitted_by_user, Vibes.Users.User
+
     timestamps()
   end
 
