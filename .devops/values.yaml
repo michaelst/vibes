@@ -19,5 +19,5 @@ resources:
     memory: 1G
 
 envVars:
-  DB_HOSTNAME: aero.blue
+  DB_HOSTNAME: 192.168.1.60
   DB_USERNAME: vibes

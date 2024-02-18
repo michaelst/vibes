@@ -35,10 +35,7 @@ if config_env() == :prod do
 
   config :vibes, VibesWeb.Endpoint,
     url: [host: host, port: 443, scheme: "https"],
-    http: [
-      ip: {0, 0, 0, 0, 0, 0, 0, 0},
-      port: port
-    ],
+    http: [port: port],
     secret_key_base: Secret.read!("SECRET_KEY_BASE"),
     server: true
 end
