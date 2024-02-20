@@ -12,6 +12,8 @@ defmodule Vibes.Challenges.Submission do
     belongs_to :track, Vibes.Music.Track
     belongs_to :user, Vibes.Users.User
 
+    has_many :ratings, Vibes.Challenges.Rating
+
     timestamps()
   end
 

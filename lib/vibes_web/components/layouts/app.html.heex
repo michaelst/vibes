@@ -10,14 +10,20 @@
       </a>
     </div>
     <div class="flex gap-x-12">
-      <.link navigate={~p"/session"} class="text-sm font-semibold leading-6 text-white">
-        Live Session
-      </.link>
       <.link navigate={~p"/"} class="text-sm font-semibold leading-6 text-white">
+        Current Challenge
+      </.link>
+      <.link navigate={~p"/challenges"} class="text-sm font-semibold leading-6 text-white">
         All Challenges
       </.link>
+      <.link navigate={~p"/reveal"} class="text-sm font-semibold leading-6 text-white">
+        Reveal Session
+      </.link>
+      <.link navigate={~p"/vibe-check"} class="text-sm font-semibold leading-6 text-white">
+        Vibe Check
+      </.link>
     </div>
-    <div class="flex flex-1 lg:justify-end">
+    <div class="flex flex-1 justify-end">
       <.link href={~p"/logout"} class="text-sm font-semibold leading-6 text-white">
         Logout
       </.link>

@@ -4,6 +4,7 @@ defmodule Vibes.Schema do
       use Ecto.Schema
 
       @foreign_key_type :string
+      @timestamps_opts [type: :utc_datetime_usec]
     end
   end
 end

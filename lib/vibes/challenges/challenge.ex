@@ -8,6 +8,7 @@ defmodule Vibes.Challenges.Challenge do
     field :subtitle, :string
     field :tracks_per_user, :integer
     field :status, :string
+    field :artwork_url, :string
 
     belongs_to :submitted_by_user, Vibes.Users.User
 

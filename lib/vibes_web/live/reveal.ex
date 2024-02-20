@@ -6,7 +6,7 @@ defmodule VibesWeb.Live.Reveal do
     submission = Vibes.Challenges.get_submission(params["id"])
     {:ok, assign(socket, challenge: challenge, submission: submission)}
   rescue
-    _error -> {:ok, push_navigate(socket, to: ~p"/session")}
+    _error -> {:ok, push_navigate(socket, to: ~p"/reveal")}
   end
 
   def render(assigns) do
@@ -33,7 +33,7 @@ defmodule VibesWeb.Live.Reveal do
           </iframe>
           <div class="mt-8">
             <.link
-              navigate={~p"/session"}
+              navigate={~p"/reveal"}
               class="rounded-md bg-indigo-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
               Done

@@ -28,8 +28,11 @@ defmodule VibesWeb.Router do
 
       live "/", Home
       live "/submit", Submit
-      live "/session", Session
+      live "/challenges", Challenges
+      live "/challenges/:id", Challenge
+      live "/reveal", RevealSession
       live "/reveal/:id", Reveal
+      live "/vibe-check", VibeCheck
     end
   end
 

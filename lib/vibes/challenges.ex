@@ -2,11 +2,12 @@ defmodule Vibes.Challenges do
   import Ecto.Query
 
   alias Vibes.Challenges.Challenge
+  alias Vibes.Challenges.Rating
   alias Vibes.Challenges.Submission
   alias Vibes.Repo
 
   def current_challenge() do
-    Repo.one(from c in Challenge, where: c.status in ["active", "reveal"])
+    Repo.one(from c in Challenge, where: c.status in ["active", "reveal", "vibe-check"])
   end
 
   def current_challenge(status) do
@@ -17,12 +18,16 @@ defmodule Vibes.Challenges do
     Repo.get!(Challenge, id)
   end
 
+  def get_challenges() do
+    Repo.all(from c in Challenge, order_by: [desc: c.inserted_at])
+  end
+
   def get_submissions(challenge_id, user_id) do
     query =
       from s in Submission,
         where: s.challenge_id == ^challenge_id and s.user_id == ^user_id,
         order_by: s.order,
-        preload: :track
+        preload: [:track, :ratings]
 
     Repo.all(query)
   end
@@ -31,8 +36,8 @@ defmodule Vibes.Challenges do
     query =
       from s in Submission,
         where: s.challenge_id == ^challenge_id,
-        order_by: s.order,
-        preload: [:user, :track]
+        order_by: s.revealed_at,
+        preload: [:user, :track, :ratings]
 
     Repo.all(query)
   end
@@ -73,6 +78,30 @@ defmodule Vibes.Challenges do
       |> Ecto.Changeset.force_change(:order, index)
       |> Repo.update!()
     end)
+  end
+
+  def save_ratings(submissions, user) do
+    query = from s in Submission, where: s.user_id == ^user.id
+    Repo.update_all(query, set: [order: nil])
+
+    ratings =
+      submissions
+      |> Enum.with_index()
+      |> Enum.map(fn {submission, index} ->
+        %{
+          id: UXID.generate!(prefix: "rat"),
+          rating: index + 1,
+          user_id: user.id,
+          submission_id: submission.id,
+          inserted_at: DateTime.utc_now(),
+          updated_at: DateTime.utc_now()
+        }
+      end)
+
+    Repo.insert_all(Rating, ratings,
+      on_conflict: {:replace, [:rating, :updated_at]},
+      conflict_target: [:user_id, :submission_id]
+    )
   end
 
   def reveal_submission(challenge_id) do
