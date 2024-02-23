@@ -13,7 +13,7 @@ defmodule Vibes.OAuth2.Spotify do
   end
 
   def authorize_url!() do
-    OAuth2.Client.authorize_url!(client(), scope: "user-read-private")
+    OAuth2.Client.authorize_url!(client(), scope: "user-read-private streaming")
   end
 
   def get_app_token(params \\ [], headers \\ [], opts \\ []) do
