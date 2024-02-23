@@ -26,7 +26,6 @@ defmodule Vibes.Challenges do
     query =
       from s in Submission,
         where: s.challenge_id == ^challenge_id and s.user_id == ^user_id,
-        order_by: s.order,
         preload: [:track, :ratings]
 
     Repo.all(query)
