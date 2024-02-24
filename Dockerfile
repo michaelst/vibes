@@ -1,15 +1,14 @@
-FROM elixir:1.16-slim AS build
+FROM hexpm/elixir:1.16.1-erlang-26.2.2-ubuntu-focal-20240123 AS build
 
-ENV MIX_ENV=prod \
-    LANG=C.UTF-8
-
-RUN apt-get update \
-  && apt-get install -y --no-install-recommends build-essential software-properties-common git \
-  && rm -rf /var/lib/apt/lists/* \
-  && mix local.hex --force \
-  && mix local.rebar --force
+RUN apt-get update -y && apt-get install -y build-essential git \
+    && apt-get clean && rm -f /var/lib/apt/lists/*_*
 
 WORKDIR /app
+
+RUN mix local.hex --force && \
+    mix local.rebar --force
+
+ENV MIX_ENV="prod"
 
 COPY mix.exs mix.lock ./
 COPY config/config.exs config/prod.exs config/runtime.exs ./config/
