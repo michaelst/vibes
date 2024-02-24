@@ -50,7 +50,7 @@ defmodule VibesWeb.Live.Submit do
   end
 
   def handle_event("search", %{"search" => search}, socket) do
-    results = Vibes.Music.track_search(socket.assigns.current_user, search)
+    results = Vibes.Music.track_search(socket.assigns.spotify_token, search)
     {:noreply, assign(socket, results: results)}
   end
 

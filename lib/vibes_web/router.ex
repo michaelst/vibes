@@ -33,6 +33,7 @@ defmodule VibesWeb.Router do
       live "/reveal", RevealSession
       live "/reveal/:id", Reveal
       live "/vibe-check", VibeCheck
+      live "/rating-reveal/:id", RatingReveal
     end
   end
 
