@@ -26,24 +26,24 @@ defmodule Vibes.Challenges do
     query =
       from s in Submission,
         where: s.challenge_id == ^challenge_id and s.user_id == ^user_id,
-        order_by: s.order,
         preload: [:track, :ratings]
 
     Repo.all(query)
   end
 
-  def get_submissions(challenge_id) do
+  def get_all_submissions(challenge_id) do
     query =
       from s in Submission,
+        join: c in assoc(s, :challenge),
         where: s.challenge_id == ^challenge_id,
-        order_by: s.revealed_at,
-        preload: [:user, :track, :ratings]
+        order_by: [s.revealed_at, {:desc, c.submitted_by_user_id == s.user_id}],
+        preload: [:user, :track, ratings: :user]
 
     Repo.all(query)
   end
 
   def get_submission(id) do
-    Repo.get!(Submission, id) |> Repo.preload(:track)
+    Repo.get!(Submission, id) |> Repo.preload([:track, ratings: :user])
   end
 
   def submit_track(challenge, user, track) do
@@ -115,6 +115,20 @@ defmodule Vibes.Challenges do
     query
     |> Repo.one()
     |> Submission.update_changeset(%{revealed_at: DateTime.utc_now()})
+    |> Repo.update!()
+  end
+
+  def reveal_rating(challenge_id) do
+    query =
+      from s in Submission,
+        join: c in assoc(s, :challenge),
+        where: s.challenge_id == ^challenge_id and is_nil(s.ratings_revealed_at),
+        order_by: [s.revealed_at, {:desc, c.submitted_by_user_id == s.user_id}],
+        limit: 1
+
+    query
+    |> Repo.one()
+    |> Submission.update_changeset(%{ratings_revealed_at: DateTime.utc_now()})
     |> Repo.update!()
   end
 

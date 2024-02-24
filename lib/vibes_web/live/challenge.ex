@@ -1,6 +1,9 @@
 defmodule VibesWeb.Live.Challenge do
   use VibesWeb, :live_view
 
+  alias VibesWeb.Components.Live.FormModal
+  alias VibesWeb.Components.Live.MySubmission
+
   require Logger
 
   def mount(%{"id" => id}, _session, socket) do
@@ -59,118 +62,18 @@ defmodule VibesWeb.Live.Challenge do
         </div>
       </div>
     </div>
-    <ul phx-hook="Sortable" class="divide-y divide-gray-800" id={@challenge.id}>
-      <li
+    <ul
+      phx-hook={@challenge.status != "final" && "Sortable"}
+      class="divide-y divide-gray-800 max-w-2xl mx-auto"
+      id={@challenge.id}
+    >
+      <MySubmission.render
         :for={submission <- @submissions}
-        :if={@challenge.status in ["active", "reveal"]}
-        id={submission.id}
-        class="flex justify-between items-center gap-x-6 py-5"
-      >
-        <div class="flex min-w-0 gap-x-4 items-center">
-          <div :if={submission.order} class="text-gray-400"><%= submission.order + 1 %></div>
-          <img class="h-12 w-12 flex-none bg-gray-800" src={submission.track.artwork_url} />
-          <div class="min-w-0 flex-auto">
-            <p class="text-sm font-semibold leading-6 text-white">
-              <%= submission.track.name %>
-              <span class="mt-1 truncate text-xs leading-5 text-gray-400">
-                by <%= submission.track.artist %>
-              </span>
-            </p>
-
-            <button
-              phx-click="show_modal"
-              phx-value-id={submission.id}
-              class="mt-1 truncate text-xs leading-5 text-gray-400 flex items-center"
-            >
-              <span><%= submission.youtube_url || "Add YouTube Link" %></span>
-              <.icon name="hero-pencil-square" class="h-4 w-4 ml-1" />
-            </button>
-          </div>
-        </div>
-        <div>
-          <button
-            :if={is_nil(submission.revealed_at)}
-            phx-click="remove"
-            phx-value-id={submission.id}
-            class="text-gray-400"
-          >
-            Remove
-          </button>
-        </div>
-      </li>
-      <li
-        :for={submission <- @submissions}
-        :if={@challenge.status not in ["active", "reveal"]}
-        id={submission.id}
-        class="flex justify-between items-center gap-x-6 py-5"
-      >
-        <div class="flex min-w-0 gap-x-4 items-center">
-          <div :if={submission.rating} class="text-gray-400">
-            <%= submission.rating %>
-          </div>
-          <img class="h-12 w-12 flex-none bg-gray-800" src={submission.track.artwork_url} />
-          <div class="min-w-0 flex-auto">
-            <p class="text-sm font-semibold leading-6 text-white">
-              <%= submission.track.name %>
-              <.link href={submission.youtube_url} target="_blank">
-                <img src={~p"/images/youtube.svg"} class="h-6 w-6 inline" />
-              </.link>
-            </p>
-            <p class="mt-1 truncate text-xs leading-5 text-gray-400">
-              by <%= submission.track.artist %>
-            </p>
-          </div>
-        </div>
-        <div class="text-gray-300 text-sm">
-          <%= submission.user.name %>
-        </div>
-      </li>
+        submission={submission}
+        challenge={@challenge}
+      />
     </ul>
-    <!-- modal -->
-    <div class="relative z-10" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-      <div
-        :if={not is_nil(@editing)}
-        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
-      >
-      </div>
-
-      <div :if={not is_nil(@editing)} class="fixed inset-0 z-10 w-screen overflow-y-auto">
-        <div class="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
-          <div class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
-            <div class="sm:flex sm:items-start">
-              <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 sm:mx-0 sm:h-10 sm:w-10">
-                <.icon name="hero-link" class="h-6 w-6" />
-              </div>
-              <.form for={@form} class="w-full" phx-submit="update_youtube_url">
-                <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <h3 class="text-base font-semibold leading-6 text-gray-900">
-                    Update YouTube Link
-                  </h3>
-                  <div class="mt-2">
-                    <.input field={@form[:youtube_url]} />
-                  </div>
-                </div>
-                <div class="mt-5 sm:mt-4 sm:flex sm:pl-4">
-                  <button
-                    type="submit"
-                    class="inline-flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 sm:w-auto"
-                  >
-                    Update
-                  </button>
-                  <button
-                    type="button"
-                    phx-click="close_modal"
-                    class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50 sm:ml-3 sm:mt-0 sm:w-auto"
-                  >
-                    Cancel
-                  </button>
-                </div>
-              </.form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+    <FormModal.render form={@form} editing={@editing} />
     """
   end
 
@@ -240,7 +143,7 @@ defmodule VibesWeb.Live.Challenge do
     if challenge.status in ["active", "reveal"] do
       Vibes.Challenges.get_submissions(challenge.id, user.id)
     else
-      Vibes.Challenges.get_submissions(challenge.id)
+      Vibes.Challenges.get_all_submissions(challenge.id)
     end
     # filter so only the current user's ratings are shown
     |> Enum.map(fn submission ->
@@ -252,6 +155,11 @@ defmodule VibesWeb.Live.Challenge do
 
       Map.put(submission, :rating, rating)
     end)
-    |> Enum.sort_by(& &1.rating)
+    |> Enum.sort_by(fn submission ->
+      case challenge.status do
+        "vibe-check" -> submission.rating
+        _status -> submission.order
+      end
+    end)
   end
 end

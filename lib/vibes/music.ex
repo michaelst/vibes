@@ -2,8 +2,8 @@ defmodule Vibes.Music do
   alias Vibes.Music.Track
   alias Vibes.Repo
 
-  def track_search(user, query) do
-    {:ok, %{body: body}} = user |> Spotify.client() |> Spotify.track_search(query)
+  def track_search(token, query) do
+    {:ok, %{body: body}} = token |> Spotify.client() |> Spotify.track_search(query)
 
     Enum.map(body["tracks"]["items"], fn item ->
       {item["id"],
