@@ -11,7 +11,7 @@ defmodule VibesWeb.Live.Submit do
 
   def render(assigns) do
     ~H"""
-    <div class="bg-gray-900 mb-8">
+    <div class="bg-gray-900 mb-8 max-w-2xl mx-auto">
       <.link navigate={~p"/"} class="text-white">Back</.link>
       <div class="mx-auto max-w-7xl mt-4">
         <.form for={%{}} phx-change="search">
@@ -28,7 +28,7 @@ defmodule VibesWeb.Live.Submit do
         </.form>
       </div>
     </div>
-    <ul role="list" class="divide-y divide-gray-800">
+    <ul role="list" class="divide-y divide-gray-800 max-w-2xl mx-auto">
       <li :for={{id, track} <- @results} class="flex justify-between items-center gap-x-6 py-5">
         <div class="flex min-w-0 gap-x-4">
           <img class="h-12 w-12 flex-none bg-gray-800" src={track.artwork_url} />

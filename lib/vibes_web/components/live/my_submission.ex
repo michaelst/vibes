@@ -3,7 +3,7 @@ defmodule VibesWeb.Components.Live.MySubmission do
 
   def render(assigns) do
     ~H"""
-    <li id={@submission.id} class="flex justify-between items-center py-5 w-full">
+    <li id={@submission.id} class="flex justify-between items-center py-5 w-full cursor-pointer">
       <div
         :if={@challenge.status not in ["active", "reveal"]}
         class="flex w-full items-center justify-between"
