@@ -3,6 +3,7 @@ defmodule VibesWeb.Live.Challenge do
 
   alias VibesWeb.Components.Live.FormModal
   alias VibesWeb.Components.Live.MySubmission
+  alias VibesWeb.Components.Live.Submission
 
   require Logger
 
@@ -63,11 +64,23 @@ defmodule VibesWeb.Live.Challenge do
       </div>
     </div>
     <ul
-      phx-hook={@challenge.status != "final" && "Sortable"}
+      :if={@challenge.status != "final"}
+      phx-hook="Sortable"
       class="divide-y divide-gray-800 max-w-2xl mx-auto"
       id={@challenge.id}
     >
       <MySubmission.render
+        :for={submission <- @submissions}
+        submission={submission}
+        challenge={@challenge}
+      />
+    </ul>
+    <ul
+      :if={@challenge.status == "final"}
+      class="divide-y divide-gray-800 max-w-2xl mx-auto"
+      id={@challenge.id}
+    >
+      <Submission.render
         :for={submission <- @submissions}
         submission={submission}
         challenge={@challenge}
@@ -143,7 +156,7 @@ defmodule VibesWeb.Live.Challenge do
     if challenge.status in ["active", "reveal"] do
       Vibes.Challenges.get_submissions(challenge.id, user.id)
     else
-      Vibes.Challenges.get_all_submissions(challenge.id)
+      Vibes.Challenges.get_all_submissions(challenge)
     end
     # filter so only the current user's ratings are shown
     |> Enum.map(fn submission ->

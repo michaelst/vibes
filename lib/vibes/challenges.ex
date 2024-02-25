@@ -31,15 +31,51 @@ defmodule Vibes.Challenges do
     Repo.all(query)
   end
 
-  def get_all_submissions(challenge_id) do
+  def get_all_submissions(challenge) do
     query =
       from s in Submission,
         join: c in assoc(s, :challenge),
-        where: s.challenge_id == ^challenge_id,
-        order_by: [s.revealed_at, {:desc, c.submitted_by_user_id == s.user_id}],
+        where: s.challenge_id == ^challenge.id,
         preload: [:user, :track, ratings: :user]
 
-    Repo.all(query)
+    submissions = Repo.all(query)
+    number_of_submissions = length(submissions)
+
+    submissions
+    |> Enum.map(fn
+      %{ratings_revealed_at: nil} = submission ->
+        Map.put(submission, :rating, nil)
+
+      submission ->
+        # if anyone has rated the song last and no one rated it first, the song is vetoed
+        with true <- Enum.any?(submission.ratings, &(&1.rating == number_of_submissions)),
+             false <- Enum.any?(submission.ratings, &(&1.rating == 1)) do
+          Map.put(submission, :rating, number_of_submissions)
+        else
+          _not_vetoed ->
+            number = length(submission.ratings)
+
+            average_rating =
+              Enum.reduce(submission.ratings, 0, fn rating, acc -> acc + rating.rating end) /
+                number
+
+            Map.put(submission, :rating, average_rating)
+        end
+    end)
+    |> Enum.sort_by(
+      &{
+        &1.rating,
+        &1.revealed_at && DateTime.to_unix(&1.revealed_at),
+        challenge.submitted_by_user_id == &1.user_id
+      }
+    )
+    |> Enum.group_by(& &1.rating)
+    |> Enum.sort_by(fn {rating, _submission} -> rating end)
+    |> Enum.reduce({[], 1}, fn {_rating, submissions}, {acc, rank} ->
+      submissions = Enum.map(submissions, fn submission -> Map.put(submission, :rank, rank) end)
+      {acc ++ submissions, rank + length(submissions)}
+    end)
+    |> elem(0)
   end
 
   def get_submission(id) do

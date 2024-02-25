@@ -12,10 +12,12 @@ defmodule VibesWeb.Live.OnMount do
         end
       end)
       |> assign_new(:spotify_token, fn %{current_user: user} ->
-        {:ok, %{token: %{access_token: token}}} =
-          Vibes.OAuth2.Spotify.refresh_user_token(user.spotify_refresh_token)
+        if user do
+          {:ok, %{token: %{access_token: token}}} =
+            Vibes.OAuth2.Spotify.refresh_user_token(user.spotify_refresh_token)
 
-        token
+          token
+        end
       end)
 
     if socket.assigns.current_user do

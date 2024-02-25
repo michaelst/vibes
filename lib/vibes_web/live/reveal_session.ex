@@ -5,7 +5,7 @@ defmodule VibesWeb.Live.RevealSession do
 
   def mount(_params, _session, socket) do
     challenge = Vibes.Challenges.current_challenge("reveal")
-    submissions = Vibes.Challenges.get_all_submissions(challenge.id)
+    submissions = Vibes.Challenges.get_all_submissions(challenge)
     {:ok, assign(socket, challenge: challenge, submissions: submissions)}
   rescue
     _error -> {:ok, assign(socket, challenge: nil)}
@@ -30,7 +30,7 @@ defmodule VibesWeb.Live.RevealSession do
           </div>
         </div>
       </div>
-      <ul class="divide-y divide-gray-800" id={@challenge.id}>
+      <ul class="divide-y divide-gray-800 max-w-2xl mx-auto" id={@challenge.id}>
         <Submission.render
           :for={submission <- @submissions}
           :if={not is_nil(submission.revealed_at)}
