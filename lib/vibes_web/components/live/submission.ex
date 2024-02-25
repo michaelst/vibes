@@ -42,7 +42,7 @@ defmodule VibesWeb.Components.Live.Submission do
             </dd>
           </div>
           <div
-            :for={rating <- @submission.ratings}
+            :for={rating <- Enum.sort_by(@submission.ratings, & &1.user.name)}
             class="flex flex-1 max-w-xs flex-col gap-y-2 text-center"
           >
             <dt class="text-sm text-gray-400"><%= rating.user.name %></dt>
