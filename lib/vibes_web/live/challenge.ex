@@ -166,7 +166,7 @@ defmodule VibesWeb.Live.Challenge do
           _none -> nil
         end
 
-      Map.put(submission, :rating, rating)
+      Map.put_new(submission, :rating, rating)
     end)
     |> Enum.sort_by(fn submission ->
       case challenge.status do
