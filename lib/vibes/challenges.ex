@@ -56,8 +56,10 @@ defmodule Vibes.Challenges do
             number = length(submission.ratings)
 
             average_rating =
-              Enum.reduce(submission.ratings, 0, fn rating, acc -> acc + rating.rating end) /
-                number
+              Enum.reduce(submission.ratings, 0, fn rating, acc -> acc + rating.rating end)
+              |> Kernel./(number)
+              |> Float.round()
+              |> trunc()
 
             Map.put(submission, :rating, average_rating)
         end
