@@ -17,13 +17,24 @@ defmodule VibesWeb.Components.Live.FormModal do
               <div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-gray-100 sm:mx-0 sm:h-10 sm:w-10">
                 <.icon name="hero-link" class="h-6 w-6" />
               </div>
-              <.form for={@form} class="w-full" phx-submit="update_youtube_url">
+              <.form
+                for={@form}
+                class="w-full"
+                phx-change="validate_submission_details"
+                phx-submit="update_submission_details"
+              >
                 <div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
-                  <h3 class="text-base font-semibold leading-6 text-gray-900">
-                    Update YouTube Link
-                  </h3>
+                  <label class="text-sm font-semibold leading-6 text-gray-900">
+                    YouTube link
+                  </label>
+                  <div class="text-sm text-gray-600">
+                    https://www.youtube.com/watch?v=xxx
+                  </div>
                   <div class="mt-2">
                     <.input field={@form[:youtube_url]} />
+                  </div>
+                  <div class="mt-2">
+                    <.input field={@form[:why]} label="Why did you add this song?" type="textarea" />
                   </div>
                 </div>
                 <div class="mt-5 sm:mt-4 sm:flex sm:pl-4">

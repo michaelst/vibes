@@ -32,6 +32,7 @@ let Hooks = {};
 Hooks.Sortable = {
   mounted() {
     new Sortable(this.el, {
+      delay: 10,
       animation: 150,
       dragClass: "drag-item",
       ghostClass: "drag-ghost",

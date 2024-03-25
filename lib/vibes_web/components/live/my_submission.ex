@@ -48,7 +48,7 @@ defmodule VibesWeb.Components.Live.MySubmission do
             phx-value-id={@submission.id}
             class="mt-1 truncate text-xs leading-5 text-gray-400 flex items-center"
           >
-            <span><%= @submission.youtube_url || "Add YouTube Link" %></span>
+            <span><%= @submission.youtube_url || "Add details" %></span>
             <.icon name="hero-pencil-square" class="h-4 w-4 ml-1" />
           </button>
         </div>

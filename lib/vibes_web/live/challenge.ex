@@ -92,12 +92,22 @@ defmodule VibesWeb.Live.Challenge do
 
   def handle_event("show_modal", %{"id" => id}, socket) do
     submission = Enum.find(socket.assigns.submissions, &(&1.id == id))
-    form = to_form(%{"youtube_url" => submission.youtube_url})
+    form = to_form(Vibes.Challenges.Submission.update_changeset(submission, %{}))
     {:noreply, assign(socket, editing: submission, form: form)}
   end
 
-  def handle_event("update_youtube_url", params, socket) do
-    case Vibes.Challenges.update_submission(socket.assigns.editing, params) do
+  def handle_event("validate_submission_details", %{"submission" => params}, socket) do
+    form =
+      socket.assigns.editing
+      |> Vibes.Challenges.Submission.update_changeset(params)
+      |> Map.put(:action, :update)
+      |> to_form()
+
+    {:noreply, assign(socket, form: form)}
+  end
+
+  def handle_event("update_submission_details", %{"submission" => params}, socket) do
+    case Vibes.Challenges.update_submission(socket.assigns.editing, params) |> dbg do
       {:ok, submission} ->
         submissions =
           Enum.map(socket.assigns.submissions, fn s ->
@@ -106,11 +116,11 @@ defmodule VibesWeb.Live.Challenge do
 
         {:noreply,
          socket
-         |> put_flash(:info, "YouTube link updated")
+         |> put_flash(:info, "Submission details updated")
          |> assign(submissions: submissions, editing: nil, form: nil)}
 
       {:error, _reason} ->
-        {:noreply, put_flash(socket, :error, "Failed to update YouTube link")}
+        {:noreply, put_flash(socket, :error, "Failed to update submission")}
     end
   end
 

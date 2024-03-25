@@ -8,6 +8,7 @@ defmodule Vibes.Challenges.Submission do
     field :youtube_url, :string
     field :revealed_at, :utc_datetime
     field :ratings_revealed_at, :utc_datetime
+    field :why, :string
 
     belongs_to :challenge, Vibes.Challenges.Challenge
     belongs_to :track, Vibes.Music.Track
@@ -33,6 +34,9 @@ defmodule Vibes.Challenges.Submission do
 
   def update_changeset(struct, attrs) do
     struct
-    |> cast(attrs, [:order, :youtube_url, :revealed_at, :ratings_revealed_at])
+    |> cast(attrs, [:order, :why, :youtube_url, :revealed_at, :ratings_revealed_at])
+    |> validate_format(:youtube_url, ~r{^https://www.youtube.com/watch\?v=.*$},
+      message: "must be a YouTube watch URL"
+    )
   end
 end

@@ -13,4 +13,8 @@ defmodule Spotify do
     query = URI.encode_query(q: search, type: "track")
     Tesla.get(client, "/search?#{query}")
   end
+
+  def get_track(client, id) do
+    Tesla.get(client, "/tracks/#{id}")
+  end
 end
