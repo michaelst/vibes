@@ -54,6 +54,10 @@ defmodule VibesWeb.Components.Live.Submission do
           <span class="text-xs text-gray-400 ">submitted by</span>
           <span class="text-sm"><%= @submission.user.name %></span>
         </div>
+        <audio :if={is_nil(@submission.ratings_revealed_at)} controls>
+          <source src={@submission.track.preview_url} type="audio/mpeg" />
+          Your browser does not support the audio element.
+        </audio>
       </div>
     </li>
     """
