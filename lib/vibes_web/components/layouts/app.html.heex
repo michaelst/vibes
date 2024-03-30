@@ -16,10 +16,18 @@
       <.link navigate={~p"/challenges"} class="text-sm font-semibold leading-6 text-white">
         All Challenges
       </.link>
-      <.link navigate={~p"/reveal"} class="text-sm font-semibold leading-6 text-white">
+      <.link
+        :if={@current_user.admin}
+        navigate={~p"/reveal"}
+        class="text-sm font-semibold leading-6 text-white"
+      >
         Reveal Session
       </.link>
-      <.link navigate={~p"/vibe-check"} class="text-sm font-semibold leading-6 text-white">
+      <.link
+        :if={@current_user.admin}
+        navigate={~p"/vibe-check"}
+        class="text-sm font-semibold leading-6 text-white"
+      >
         Vibe Check
       </.link>
     </div>

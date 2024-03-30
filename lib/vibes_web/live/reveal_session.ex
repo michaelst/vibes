@@ -3,7 +3,7 @@ defmodule VibesWeb.Live.RevealSession do
 
   alias VibesWeb.Components.Live.Submission
 
-  def mount(_params, _session, socket) do
+  def mount(_params, _session, %{assigns: %{current_user: %{admin: true}}} = socket) do
     challenge = Vibes.Challenges.current_challenge("reveal")
     submissions = Vibes.Challenges.get_all_submissions(challenge)
     {:ok, assign(socket, challenge: challenge, submissions: submissions)}

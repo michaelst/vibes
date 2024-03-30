@@ -7,6 +7,7 @@ defmodule Vibes.Users.User do
     field :name, :string
     field :spotify_id, :string
     field :spotify_refresh_token, :string
+    field :admin, :boolean, default: false
 
     timestamps()
   end
