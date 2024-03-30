@@ -15,6 +15,9 @@ defmodule VibesWeb.Components.Live.Submission do
           <div :if={@submission.ratings_revealed_at} class="text-gray-400">
             <%= @submission.rank %>
           </div>
+          <div :if={@challenge.status == :rate} class="text-gray-400">
+            <%= @submission.my_rating %>
+          </div>
           <img class="h-12 w-12 flex-none bg-gray-800" src={@submission.track.artwork_url} />
           <div>
             <p class="text-sm font-semibold leading-6 text-white flex">

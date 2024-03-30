@@ -177,19 +177,20 @@ defmodule VibesWeb.Live.Challenge do
     else
       Vibes.Challenges.get_all_submissions(challenge)
     end
-    # filter so only the current user's ratings are shown
     |> Enum.map(fn submission ->
+      # filter so only the current user's ratings are shown
       rating =
         case Enum.find(submission.ratings, &(&1.user_id == user.id)) do
           %{rating: rating} -> rating
           _none -> nil
         end
 
-      Map.put_new(submission, :rating, rating)
+      Map.put(submission, :my_rating, rating)
     end)
     |> Enum.sort_by(fn submission ->
       case challenge.status do
         :vibe_check -> submission.rating
+        :rate -> submission.my_rating
         _status -> submission.order
       end
     end)
