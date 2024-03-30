@@ -13,7 +13,7 @@ defmodule VibesWeb.Live.Reveal do
     ~H"""
     <div class="bg-gray-900 mb-8">
       <div class="mx-auto max-w-7xl px-6 lg:px-8">
-        <div class="mx-auto max-w-2xl sm:text-center">
+        <div class="mx-auto max-w-2xl sm:text-center flex flex-col items-center">
           <p class="mt-4 text-3xl font-bold tracking-tight text-white sm:text-4xl">
             <%= @submission.track.name %>
           </p>
@@ -31,6 +31,9 @@ defmodule VibesWeb.Live.Reveal do
             allowfullscreen
           >
           </iframe>
+          <p class="text-white mt-4">
+            <%= @submission.why %>
+          </p>
           <div class="mt-8">
             <.link
               navigate={~p"/reveal"}
