@@ -28,7 +28,10 @@ defmodule VibesWeb.Components.Live.Submission do
             </p>
           </div>
         </div>
-        <div class="text-right min-w-40 flex flex-col gap-y-1">
+        <div
+          :if={not is_nil(@submission.ratings_revealed_at)}
+          class="text-right min-w-40 flex flex-col gap-y-1"
+        >
           <span class="text-xs text-gray-400 ">submitted by</span>
           <span class="text-sm"><%= @submission.user.name %></span>
         </div>

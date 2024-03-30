@@ -7,7 +7,7 @@ defmodule Vibes.Challenges do
   alias Vibes.Repo
 
   def current_challenge() do
-    Repo.one(from c in Challenge, where: c.status in ["active", "reveal", "vibe-check"])
+    Repo.one(from c in Challenge, where: c.status in [:active, :reveal, :rate, :vibe_check])
   end
 
   def current_challenge(status) do
@@ -145,9 +145,8 @@ defmodule Vibes.Challenges do
   def reveal_submission(challenge_id) do
     query =
       from s in Submission,
-        join: c in assoc(s, :challenge),
         where: s.challenge_id == ^challenge_id and is_nil(s.revealed_at),
-        order_by: [s.order, {:desc, c.submitted_by_user_id == s.user_id}],
+        order_by: fragment("RANDOM()"),
         limit: 1
 
     query

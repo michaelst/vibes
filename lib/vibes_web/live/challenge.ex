@@ -31,25 +31,25 @@ defmodule VibesWeb.Live.Challenge do
       <div class="mx-auto max-w-7xl px-6">
         <div class="mx-auto max-w-2xl text-center">
           <h2
-            :if={@challenge.status in ["upcoming"]}
+            :if={@challenge.status == :upcoming}
             class="text-base font-semibold leading-7 text-indigo-400"
           >
             Coming Soon
           </h2>
           <h2
-            :if={@challenge.status in ["active", "reveal", "vibe-check"]}
+            :if={@challenge.status in [:active, :reveal, :vibe_check]}
             class="text-base font-semibold leading-7 text-indigo-400"
           >
             Current Challenge
           </h2>
           <img src={@challenge.artwork_url} class="my-6 mx-auto h-[300px]" />
-          <p :if={@challenge.status == "vibe-check"} class="text-sm text-gray-300">
+          <p :if={@challenge.status == :vibe_check} class="text-sm text-gray-300">
             Drag and drop songs in your rating order.
           </p>
           <div
             :if={
               length(@submissions) < @challenge.tracks_per_user and
-                @challenge.status in ["active", "reveal"]
+                @challenge.status in [:active, :reveal]
             }
             class="mt-8"
           >
@@ -64,19 +64,32 @@ defmodule VibesWeb.Live.Challenge do
       </div>
     </div>
     <ul
-      :if={@challenge.status != "final"}
+      :if={@challenge.status in [:active, :reveal]}
       phx-hook="Sortable"
       class="divide-y divide-gray-800 max-w-2xl mx-auto"
       id={@challenge.id}
     >
       <MySubmission.render
         :for={submission <- @submissions}
+        :if={submission.user_id == @current_user.id}
         submission={submission}
         challenge={@challenge}
       />
     </ul>
     <ul
-      :if={@challenge.status == "final"}
+      :if={@challenge.status == :rate}
+      phx-hook="Sortable"
+      class="divide-y divide-gray-800 max-w-2xl mx-auto"
+      id={@challenge.id}
+    >
+      <Submission.render
+        :for={submission <- @submissions}
+        submission={submission}
+        challenge={@challenge}
+      />
+    </ul>
+    <ul
+      :if={@challenge.status == :final}
       class="divide-y divide-gray-800 max-w-2xl mx-auto"
       id={@challenge.id}
     >
@@ -150,10 +163,10 @@ defmodule VibesWeb.Live.Challenge do
     new_order = List.insert_at(submissions, new, to_move)
 
     case challenge.status do
-      status when status in ["active", "reveal"] ->
+      status when status in [:active, :reveal] ->
         Vibes.Challenges.save_order(new_order, user)
 
-      "vibe-check" ->
+      :rate ->
         Vibes.Challenges.save_ratings(new_order, user)
     end
 
@@ -163,7 +176,7 @@ defmodule VibesWeb.Live.Challenge do
   end
 
   defp fetch_submissions(challenge, user) do
-    if challenge.status in ["active", "reveal"] do
+    if challenge.status in [:active, :reveal] do
       Vibes.Challenges.get_submissions(challenge.id, user.id)
     else
       Vibes.Challenges.get_all_submissions(challenge)
@@ -180,7 +193,7 @@ defmodule VibesWeb.Live.Challenge do
     end)
     |> Enum.sort_by(fn submission ->
       case challenge.status do
-        "vibe-check" -> submission.rating
+        :vibe_check -> submission.rating
         _status -> submission.order
       end
     end)

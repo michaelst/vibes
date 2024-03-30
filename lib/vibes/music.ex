@@ -44,7 +44,7 @@ defmodule Vibes.Music do
     query
     |> Repo.all()
     |> Enum.map(&Spotify.get_track(client, &1))
-    |> Enum.map(fn {:ok, %{body: body}} ->
+    |> Enum.each(fn {:ok, %{body: body}} ->
       insert_track(%{
         artist: body["artists"] |> Enum.map(& &1["name"]) |> Enum.join(", "),
         artwork_url: body["album"]["images"] |> List.last() |> Map.get("url"),
