@@ -88,11 +88,7 @@ defmodule VibesWeb.Live.Challenge do
         challenge={@challenge}
       />
     </ul>
-    <ul
-      :if={@challenge.status == :final}
-      class="divide-y divide-gray-800 max-w-2xl mx-auto"
-      id={@challenge.id}
-    >
+    <ul :if={@challenge.status == :final} class="divide-y divide-gray-800 w-full" id={@challenge.id}>
       <Submission.render
         :for={submission <- @submissions}
         submission={submission}

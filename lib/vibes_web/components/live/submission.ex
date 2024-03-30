@@ -11,7 +11,7 @@ defmodule VibesWeb.Components.Live.Submission do
       ]}
     >
       <div class="flex w-full items-center justify-between">
-        <div class="flex gap-x-4 items-center">
+        <div class="flex gap-x-4 items-center flex-1">
           <div :if={@submission.ratings_revealed_at} class="text-gray-400">
             <%= @submission.rank %>
           </div>
@@ -28,31 +28,28 @@ defmodule VibesWeb.Components.Live.Submission do
             </p>
           </div>
         </div>
+
+        <div :if={@submission.ratings_revealed_at} class="flex items-center">
+          <div class="w-full flex tems-center gap-x-4">
+            <div
+              :for={rating <- Enum.sort_by(@submission.ratings, & &1.user.name)}
+              class="flex flex-1 max-w-xs flex-col gap-y-1 text-center"
+            >
+              <dd class="font-semibold tracking-tight text-white text-lg">
+                <%= rating.rating %>
+              </dd>
+              <dt class="text-xs text-gray-400 whitespace-nowrap"><%= rating.user.name %></dt>
+            </div>
+          </div>
+          <span class="text-3xl ml-8"><%= @submission.rating %></span>
+        </div>
+
         <div
           :if={not is_nil(@submission.ratings_revealed_at)}
           class="text-right min-w-40 flex flex-col gap-y-1"
         >
           <span class="text-xs text-gray-400 ">submitted by</span>
           <span class="text-sm"><%= @submission.user.name %></span>
-        </div>
-      </div>
-      <div :if={@submission.ratings_revealed_at} class="ml-20">
-        <div class="w-full flex mt-4 items-center gap-x-4">
-          <div class="flex flex-1 max-w-xs flex-col gap-y-2 text-center">
-            <dt class="text-sm text-gray-400">Overall</dt>
-            <dd class="text-xl font-semibold tracking-tight text-white">
-              <%= @submission.rating %>
-            </dd>
-          </div>
-          <div
-            :for={rating <- Enum.sort_by(@submission.ratings, & &1.user.name)}
-            class="flex flex-1 max-w-xs flex-col gap-y-2 text-center"
-          >
-            <dt class="text-sm text-gray-400"><%= rating.user.name %></dt>
-            <dd class="text-xl font-semibold tracking-tight text-white">
-              <%= rating.rating %>
-            </dd>
-          </div>
         </div>
       </div>
     </li>
