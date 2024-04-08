@@ -21,7 +21,7 @@ COPY rel rel
 RUN --mount=type=cache,target=/app/deps \
     --mount=type=cache,target=/app/_build/prod \
       rm -rf /app/_build/prod/rel && \
-      mix do deps.get --only prod, clean, assets.deploy, release && \
+      mix do deps.clean tailwind, deps.get --only prod, clean, assets.deploy, release && \
       # copy out of the cache so it is available
       cp -r /app/_build/prod/rel/vibes ./release
 
