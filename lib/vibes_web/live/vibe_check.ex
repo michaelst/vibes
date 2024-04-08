@@ -4,7 +4,7 @@ defmodule VibesWeb.Live.VibeCheck do
   alias VibesWeb.Components.Live.Submission
 
   def mount(_params, _session, %{assigns: %{current_user: %{admin: true}}} = socket) do
-    challenge = Vibes.Challenges.current_challenge("vibe-check")
+    challenge = Vibes.Challenges.current_challenge("vibe_check")
     submissions = Vibes.Challenges.get_all_submissions(challenge)
     {:ok, assign(socket, challenge: challenge, submissions: submissions)}
   rescue

@@ -2,7 +2,7 @@ defmodule VibesWeb.Live.RatingReveal do
   use VibesWeb, :live_view
 
   def mount(params, _session, socket) do
-    challenge = Vibes.Challenges.current_challenge("vibe-check")
+    challenge = Vibes.Challenges.current_challenge("vibe_check")
     submission = Vibes.Challenges.get_submission(params["id"])
     {:ok, assign(socket, challenge: challenge, submission: submission, show_ratings: false)}
   rescue
