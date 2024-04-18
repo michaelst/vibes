@@ -4,7 +4,7 @@ defmodule VibesWeb.Components.Live.MySubmission do
   def render(assigns) do
     ~H"""
     <li id={@submission.id} class="flex justify-between items-center py-5 w-full cursor-pointer">
-      <div class="flex min-w-0 gap-x-4 items-center">
+      <div class="flex min-w-0 gap-x-4 items-center truncate pr-2">
         <div :if={@submission.order} class="text-gray-400">
           <%= @submission.order + 1 %>
         </div>
@@ -22,7 +22,7 @@ defmodule VibesWeb.Components.Live.MySubmission do
             phx-value-id={@submission.id}
             class="mt-1 truncate text-xs leading-5 text-gray-400 flex items-center"
           >
-            <span><%= @submission.youtube_url || "Add details" %></span>
+            <span><%= (@submission.youtube_url && "Edit details") || "Add details" %></span>
             <.icon name="hero-pencil-square" class="h-4 w-4 ml-1" />
           </button>
         </div>
