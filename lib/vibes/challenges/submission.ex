@@ -39,4 +39,16 @@ defmodule Vibes.Challenges.Submission do
       message: "must be a YouTube watch URL"
     )
   end
+
+  def parse_youtube_url(url) when is_binary(url) do
+    regex =
+      ~r/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/
+
+    case Regex.run(regex, url) do
+      [_link, id] -> "https://www.youtube.com/watch?v=#{id}"
+      _no_match -> url
+    end
+  end
+
+  def parse_youtube_url(url), do: url
 end

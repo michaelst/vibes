@@ -106,6 +106,12 @@ defmodule VibesWeb.Live.Challenge do
   end
 
   def handle_event("validate_submission_details", %{"submission" => params}, socket) do
+    params =
+      %{
+        params
+        | "youtube_url" => Vibes.Challenges.Submission.parse_youtube_url(params["youtube_url"])
+      }
+
     form =
       socket.assigns.editing
       |> Vibes.Challenges.Submission.update_changeset(params)
@@ -116,7 +122,7 @@ defmodule VibesWeb.Live.Challenge do
   end
 
   def handle_event("update_submission_details", %{"submission" => params}, socket) do
-    case Vibes.Challenges.update_submission(socket.assigns.editing, params) |> dbg do
+    case Vibes.Challenges.update_submission(socket.assigns.editing, params) do
       {:ok, submission} ->
         submissions =
           Enum.map(socket.assigns.submissions, fn s ->
