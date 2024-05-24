@@ -4,10 +4,10 @@ set -e
 
 cd "`dirname $0`"/..
 
-export DOCKER_HOST="ssh://michael@arctic.local"
 COMMIT_SHA=$(git rev-parse HEAD)
 
-docker buildx build -t ghcr.io/michaelst/vibes:$COMMIT_SHA . --push
+docker buildx use multi-platform
+docker buildx build --platform=linux/amd64,linux/arm64 -t ghcr.io/michaelst/vibes:$COMMIT_SHA . --push --provenance=false
 
 helm upgrade --install vibes oci://ghcr.io/michaelst/helm/cloud-57 \
   -f .devops/values.yaml \

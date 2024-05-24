@@ -146,11 +146,16 @@ defmodule Vibes.Challenges do
     query =
       from s in Submission,
         where: s.challenge_id == ^challenge_id and is_nil(s.revealed_at),
-        order_by: fragment("RANDOM()"),
-        limit: 1
+        order_by: s.order,
+        preload: [:challenge]
 
     query
-    |> Repo.one()
+    |> Repo.all()
+    |> Enum.flat_map(fn submission ->
+      number_of_copies = submission.challenge.tracks_per_user - submission.order
+      Enum.map(0..number_of_copies, fn _ -> submission end)
+    end)
+    |> Enum.random()
     |> Submission.update_changeset(%{revealed_at: DateTime.utc_now()})
     |> Repo.update!()
   end
