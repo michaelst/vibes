@@ -122,6 +122,12 @@ defmodule VibesWeb.Live.Challenge do
   end
 
   def handle_event("update_submission_details", %{"submission" => params}, socket) do
+    params =
+      %{
+        params
+        | "youtube_url" => Vibes.Challenges.Submission.parse_youtube_url(params["youtube_url"])
+      }
+
     case Vibes.Challenges.update_submission(socket.assigns.editing, params) do
       {:ok, submission} ->
         submissions =
