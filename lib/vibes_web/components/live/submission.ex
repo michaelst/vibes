@@ -26,7 +26,7 @@ defmodule VibesWeb.Components.Live.Submission do
                 <img src={~p"/images/youtube.svg"} class="h-6 w-6 inline ml-1" />
               </.link>
             </p>
-            <p class="mt-1 truncate text-xs leading-5 text-gray-400">
+            <p class="mt-1 text-wrap text-xs leading-5 text-gray-400 pr-4">
               by <%= @submission.track.artist %>
             </p>
             <p class="mt-1 text-wrap text-xs leading-5 text-gray-300 mt-4 pr-4">

@@ -66,7 +66,7 @@ defmodule VibesWeb.Live.Challenge do
     <ul
       :if={@challenge.status in [:active, :reveal]}
       phx-hook="Sortable"
-      class="divide-y divide-gray-800 max-w-2xl mx-auto"
+      class="divide-y divide-gray-800 max-w-3xl mx-auto"
       id={@challenge.id}
     >
       <MySubmission.render
@@ -79,7 +79,7 @@ defmodule VibesWeb.Live.Challenge do
     <ul
       :if={@challenge.status == :rate}
       phx-hook="Sortable"
-      class="divide-y divide-gray-800 max-w-2xl mx-auto"
+      class="divide-y divide-gray-800 max-w-3xl mx-auto"
       id={@challenge.id}
     >
       <Submission.render
