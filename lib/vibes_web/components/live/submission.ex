@@ -20,7 +20,7 @@ defmodule VibesWeb.Components.Live.Submission do
           </div>
           <img class="h-12 w-12 flex-none bg-gray-800" src={@submission.track.artwork_url} />
           <div>
-            <p class="text-sm font-semibold leading-6 text-white flex">
+            <p class="text-sm font-semibold leading-6 text-white flex items-center">
               <span class="truncate text-white"><%= @submission.track.name %></span>
               <.link href={@submission.youtube_url} target="_blank">
                 <img src={~p"/images/youtube.svg"} class="h-6 w-6 inline ml-1" />
@@ -28,6 +28,9 @@ defmodule VibesWeb.Components.Live.Submission do
             </p>
             <p class="mt-1 truncate text-xs leading-5 text-gray-400">
               by <%= @submission.track.artist %>
+            </p>
+            <p class="mt-1 text-wrap text-xs leading-5 text-gray-300 mt-4 pr-4">
+              <%= @submission.why %>
             </p>
           </div>
         </div>
