@@ -30,20 +30,8 @@ defmodule VibesWeb.Live.Challenge do
     <div class="bg-gray-900 mb-8">
       <div class="mx-auto max-w-7xl px-6">
         <div class="mx-auto max-w-2xl text-center">
-          <h2
-            :if={@challenge.status == :upcoming}
-            class="text-base font-semibold leading-7 text-indigo-400"
-          >
-            Coming Soon
-          </h2>
-          <h2
-            :if={@challenge.status in [:active, :reveal, :vibe_check]}
-            class="text-base font-semibold leading-7 text-indigo-400"
-          >
-            Current Challenge
-          </h2>
           <img src={@challenge.artwork_url} class="my-6 mx-auto h-[300px]" />
-          <p :if={@challenge.status == :vibe_check} class="text-sm text-gray-300">
+          <p :if={@challenge.status == :rate} class="text-sm text-gray-300">
             Drag and drop songs in your rating order.
           </p>
           <div
@@ -54,7 +42,7 @@ defmodule VibesWeb.Live.Challenge do
             class="mt-8"
           >
             <.link
-              navigate={~p"/submit"}
+              navigate={~p"/submit/#{@challenge.id}"}
               class="rounded-md bg-indigo-500 px-2.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
             >
               Add song

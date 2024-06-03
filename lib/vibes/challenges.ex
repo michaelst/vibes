@@ -6,10 +6,6 @@ defmodule Vibes.Challenges do
   alias Vibes.Challenges.Submission
   alias Vibes.Repo
 
-  def current_challenge() do
-    Repo.one(from c in Challenge, where: c.status in [:active, :reveal, :rate, :vibe_check])
-  end
-
   def current_challenge(status) do
     Repo.one(from c in Challenge, where: c.status == ^status)
   end

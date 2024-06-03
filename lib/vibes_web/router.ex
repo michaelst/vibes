@@ -26,9 +26,8 @@ defmodule VibesWeb.Router do
     scope "/", VibesWeb.Live do
       pipe_through :browser
 
-      live "/", Home
-      live "/submit", Submit
-      live "/challenges", Challenges
+      live "/", Challenges
+      live "/submit/:id", Submit
       live "/challenges/:id", Challenge
       live "/reveal", RevealSession
       live "/reveal/:id", Reveal
