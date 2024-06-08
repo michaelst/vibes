@@ -30,7 +30,7 @@ defmodule VibesWeb.Live.VibeCheck do
           </div>
         </div>
       </div>
-      <ul class="divide-y divide-gray-800 max-w-2xl mx-auto" id={@challenge.id}>
+      <ul class="divide-y divide-gray-800 w-full mx-auto" id={@challenge.id}>
         <Submission.render
           :for={submission <- @submissions}
           submission={submission}
