@@ -79,7 +79,7 @@ defmodule Vibes.Challenges do
   end
 
   def get_submission(id) do
-    Repo.get!(Submission, id) |> Repo.preload([:track, ratings: :user])
+    Repo.get!(Submission, id) |> Repo.preload([:user, :track, ratings: :user])
   end
 
   def submit_track(challenge, user, track) do
