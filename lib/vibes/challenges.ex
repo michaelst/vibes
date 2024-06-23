@@ -45,7 +45,9 @@ defmodule Vibes.Challenges do
       submission ->
         # if anyone has rated the song last and no one rated it first, the song is vetoed
         with true <- Enum.any?(submission.ratings, &(&1.rating == number_of_submissions)),
-             false <- Enum.any?(submission.ratings, &(&1.rating == 1)) do
+             false <- Enum.any?(submission.ratings, &(&1.rating == 1)),
+             # only submissions before this date had the veto rule
+             :lt <- DateTime.compare(submission.inserted_at, ~U[2024-06-01 00:00:00Z]) do
           Map.put(submission, :rating, number_of_submissions)
         else
           _not_vetoed ->
