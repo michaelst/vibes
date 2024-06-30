@@ -21,6 +21,9 @@ defmodule VibesWeb.Live.RatingReveal do
             <p class="mt-2 text-lg leading-8 text-gray-300">
               <%= @submission.track.artist %>
             </p>
+            <p class="mt-4 text-md leading-8 text-gray-300">
+              <span class="text-gray-500">Submitted by</span> <%= @submission.user.name %>
+            </p>
           </div>
 
           <audio controls class="mx-auto my-4">
