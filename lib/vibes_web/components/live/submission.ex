@@ -2,6 +2,8 @@ defmodule VibesWeb.Components.Live.Submission do
   use VibesWeb, :html
 
   def render(assigns) do
+    assigns = assign(assigns, simple: assigns[:simple] || false)
+
     ~H"""
     <li
       id={@submission.id}
@@ -29,13 +31,16 @@ defmodule VibesWeb.Components.Live.Submission do
             <p class="mt-1 text-wrap text-xs leading-5 text-gray-400 pr-4">
               by <%= @submission.track.artist %>
             </p>
-            <p class="mt-1 text-wrap text-xs leading-5 text-gray-300 mt-4 pr-4">
+            <p :if={not @simple} class="mt-1 text-wrap text-xs leading-5 text-gray-300 mt-4 pr-4">
               <%= @submission.why %>
             </p>
           </div>
         </div>
 
-        <div :if={@submission.ratings_revealed_at} class="flex items-center">
+        <div
+          :if={not is_nil(@submission.ratings_revealed_at) and not @simple}
+          class="flex items-center"
+        >
           <div class="w-full flex tems-center gap-x-4">
             <div
               :for={rating <- Enum.sort_by(@submission.ratings, & &1.user.name)}
