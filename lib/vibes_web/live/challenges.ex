@@ -24,7 +24,7 @@ defmodule VibesWeb.Live.Challenges do
 
             <ul
               :if={challenge.status == :final}
-              class="divide-y divide-gray-800 flex-auto -mt-5"
+              class="divide-y divide-gray-800 flex-auto -mt-5 -mb-5"
               id={challenge.id}
             >
               <Submission.render
