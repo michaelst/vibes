@@ -15,26 +15,28 @@ defmodule VibesWeb.Live.Challenges do
     <div class="bg-gray-900 mb-8">
       <div class="mx-auto max-w-7xl flex flex-col gap-10 divide-y divide-gray-800">
         <div :for={challenge <- @challenges} class="pt-10">
-          <div class="flex gap-x-8">
-            <div class="w-96">
+          <div class="flex gap-8 flex-col sm:flex-row">
+            <div class="w-96 mx-auto">
               <.link href={~p"/challenges/#{challenge.id}"}>
                 <img src={challenge.artwork_url} class="h-96 w-96" />
               </.link>
             </div>
 
-            <ul
-              :if={challenge.status == :final}
-              class="divide-y divide-gray-800 flex-auto -mt-5 -mb-5"
-              id={challenge.id}
-            >
-              <Submission.render
-                :for={submission <- Vibes.Challenges.get_all_submissions(challenge)}
-                :if={submission.rank <= 5}
-                submission={submission}
-                challenge={challenge}
-                simple={true}
-              />
-            </ul>
+            <div class="flex-auto">
+              <ul
+                :if={challenge.status == :final}
+                class="divide-y divide-gray-800 -mt-5 -mb-5"
+                id={challenge.id}
+              >
+                <Submission.render
+                  :for={submission <- Vibes.Challenges.get_all_submissions(challenge)}
+                  :if={submission.rank <= 5}
+                  submission={submission}
+                  challenge={challenge}
+                  simple={true}
+                />
+              </ul>
+            </div>
           </div>
         </div>
       </div>
