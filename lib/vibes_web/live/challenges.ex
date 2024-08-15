@@ -1,10 +1,8 @@
 defmodule VibesWeb.Live.Challenges do
   use VibesWeb, :live_view
 
-  alias VibesWeb.Components.Live.Submission
-
   def mount(_params, _session, socket) do
-    challenges = Vibes.Challenges.get_challenges()
+    challenges = Vibes.Challenges.get_active_challenges()
     {:ok, assign(socket, challenges: challenges)}
   rescue
     _error -> {:ok, push_navigate(socket, to: ~p"/")}
@@ -22,20 +20,17 @@ defmodule VibesWeb.Live.Challenges do
               </.link>
             </div>
 
-            <div class="flex-auto">
-              <ul
-                :if={challenge.status == :final}
-                class="divide-y divide-gray-800 -mt-5 -mb-5"
-                id={challenge.id}
-              >
-                <Submission.render
-                  :for={submission <- Vibes.Challenges.get_all_submissions(challenge)}
-                  :if={submission.rank <= 5}
-                  submission={submission}
-                  challenge={challenge}
-                  simple={true}
-                />
-              </ul>
+            <div class="flex-auto text-gray-50">
+              <div :if={challenge.status == :rate} class="flex flex-col">
+                <div class="text-sm text-gray-400">Ratings due:</div>
+                <format-date date={challenge.rating_due_date}></format-date>
+              </div>
+              <div :if={challenge.status == :active} class="flex flex-col">
+                <div class="text-sm text-gray-400">Submissions due:</div>
+                <format-date date={challenge.submission_due_date}></format-date>
+                <div class="mt-4 text-sm text-gray-400">Ratings due:</div>
+                <format-date date={challenge.rating_due_date}></format-date>
+              </div>
             </div>
           </div>
         </div>

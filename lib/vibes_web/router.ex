@@ -27,6 +27,7 @@ defmodule VibesWeb.Router do
       pipe_through :browser
 
       live "/", Challenges
+      live "/hall-of-fame", HallOfFame
       live "/submit/:id", Submit
       live "/challenges/:id", Challenge
       live "/reveal", RevealSession

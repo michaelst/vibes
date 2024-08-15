@@ -8,6 +8,8 @@ defmodule Vibes.Challenges.Challenge do
     field :subtitle, :string
     field :tracks_per_user, :integer
     field :status, Ecto.Enum, values: [:active, :reveal, :rate, :vibe_check, :final]
+    field :submission_due_date, :utc_datetime
+    field :rating_due_date, :utc_datetime
 
     field :artwork_url, :string
 

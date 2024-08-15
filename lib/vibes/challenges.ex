@@ -14,8 +14,12 @@ defmodule Vibes.Challenges do
     Repo.get!(Challenge, id)
   end
 
-  def get_challenges() do
-    Repo.all(from c in Challenge, order_by: [desc: c.inserted_at])
+  def get_active_challenges() do
+    Repo.all(from c in Challenge, where: c.status != :final, order_by: [asc: c.inserted_at])
+  end
+
+  def get_final_challenges() do
+    Repo.all(from c in Challenge, where: c.status == :final, order_by: [desc: c.inserted_at])
   end
 
   def get_submissions(challenge_id, user_id) do
@@ -65,8 +69,7 @@ defmodule Vibes.Challenges do
     |> Enum.sort_by(
       &{
         &1.rating,
-        &1.revealed_at && DateTime.to_unix(&1.revealed_at),
-        challenge.submitted_by_user_id == &1.user_id
+        &1.revealed_at && DateTime.to_unix(&1.revealed_at)
       }
     )
     |> Enum.group_by(& &1.rating)
@@ -163,7 +166,7 @@ defmodule Vibes.Challenges do
       from s in Submission,
         join: c in assoc(s, :challenge),
         where: s.challenge_id == ^challenge_id and is_nil(s.ratings_revealed_at),
-        order_by: [s.revealed_at, {:desc, c.submitted_by_user_id == s.user_id}],
+        order_by: s.revealed_at,
         limit: 1
 
     query
