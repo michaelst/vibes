@@ -105,10 +105,7 @@ defmodule Vibes.Challenges do
     Repo.delete(submission)
   end
 
-  def save_order(submissions, user) do
-    query = from s in Submission, where: s.user_id == ^user.id
-    Repo.update_all(query, set: [order: nil])
-
+  def save_order(submissions) do
     submissions
     |> Enum.with_index()
     |> Enum.map(fn {submission, index} ->
@@ -120,9 +117,6 @@ defmodule Vibes.Challenges do
   end
 
   def save_ratings(submissions, user) do
-    query = from s in Submission, where: s.user_id == ^user.id
-    Repo.update_all(query, set: [order: nil])
-
     ratings =
       submissions
       |> Enum.with_index()

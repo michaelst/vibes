@@ -160,7 +160,7 @@ defmodule VibesWeb.Live.Challenge do
 
     case challenge.status do
       status when status in [:active, :reveal] ->
-        Vibes.Challenges.save_order(new_order, user)
+        Vibes.Challenges.save_order(new_order)
 
       :rate ->
         Vibes.Challenges.save_ratings(new_order, user)
