@@ -32,6 +32,5 @@ defmodule Vibes.Repo.Migrations.SubmissionsSetup do
     end
 
     create unique_index(:submissions, [:challenge_id, :track_id])
-    create unique_index(:submissions, [:challenge_id, :user_id, :order])
   end
 end
